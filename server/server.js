@@ -6,6 +6,7 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const session = require("express-session");
+const SqliteSessionStore = require("./utils/sessionStore");
 
 const materialRoutes = require("./routes/material");
 const chatRoutes = require("./routes/chat");
@@ -31,6 +32,7 @@ app.use(express.json({ limit: "2mb" }));
 
 app.use(
   session({
+    store: new SqliteSessionStore(),
     name: "caplearn.sid",
     secret: process.env.SESSION_SECRET || "caplearn-dev-secret-inseguro",
     resave: false,

@@ -20,6 +20,12 @@ db.exec(`
     PRIMARY KEY (usuario_id, clave),
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
   );
+
+  CREATE TABLE IF NOT EXISTS sesiones (
+    sid TEXT PRIMARY KEY,
+    datos TEXT NOT NULL,
+    expira_en INTEGER NOT NULL
+  );
 `);
 
 module.exports = db;
