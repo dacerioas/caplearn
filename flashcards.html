@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CapLearn - Flashcards</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="material.css">
+  <link rel="stylesheet" href="flashcards.css">
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <img src="logo.PNG" alt="CapLearn" class="sidebar-logo">
+
+    <nav class="nav">
+      <a href="dashboard.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        Inicio
+      </a>
+      <a href="flashcards.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2"/></svg>
+        Flashcards
+      </a>
+      <a href="quiz.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        Quiz
+      </a>
+      <a href="chatbot.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+        FlashBot
+      </a>
+      <a href="material.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 13v8"/><path d="m8 17 4-4 4 4"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        Mi Material
+      </a>
+    </nav>
+
+    <div class="perfil">
+      <div class="avatar" id="perfilAvatar">AV</div>
+      <div class="perfil-info">
+        <p class="perfil-nombre" id="perfilNombre">Ana Valdés</p>
+        <p class="perfil-rol">Estudiante</p>
+      </div>
+      <button type="button" class="perfil-salir" id="logoutBtn" title="Cerrar sesión" aria-label="Cerrar sesión">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="contenido">
+
+    <div class="header">
+      <div class="saludo">
+        <h1>Flashcards</h1>
+        <p>Repasa tus tarjetas con repetición espaciada</p>
+      </div>
+    </div>
+
+    <!-- PASO 1: elegir tema -->
+    <div class="tarjeta origen-seccion" id="origenSeccion">
+      <div class="temas-header">
+        <h3>Tus temas</h3>
+        <button type="button" class="btn-primario" id="crearManualBtn">+ Crear tema manual</button>
+      </div>
+      <div class="temas-lista" id="temasLista"></div>
+      <p class="origen-vacio oculto" id="origenVacio">Todavía no tienes ningún tema. <a href="material.html">Sube material</a> o crea uno manualmente.</p>
+    </div>
+
+    <!-- Generando flashcards para un tema que aún no las tenía -->
+    <div class="tarjeta material-loading oculto" id="generandoCard">
+      <div class="spinner"></div>
+      <p>Generando flashcards con IA...</p>
+    </div>
+    <p class="upload-error oculto" id="generandoError"></p>
+
+    <!-- PASO 1b: crear manual -->
+    <div class="tarjeta manual-seccion oculto" id="manualSeccion">
+      <h3>Crear tarjetas manualmente</h3>
+      <div class="manual-nombre-fila">
+        <input type="text" id="manualNombreTema" class="manual-nombre-input" placeholder="Nombre del tema (ej. Anatomía del corazón)">
+        <button type="button" class="btn-secundario" id="sugerirNombreBtn" disabled>✨ Sugerir con IA</button>
+      </div>
+      <div class="manual-form">
+        <input type="text" id="manualPregunta" placeholder="Pregunta">
+        <input type="text" id="manualRespuesta" placeholder="Respuesta">
+        <button type="button" class="btn-secundario" id="manualAgregarBtn">Agregar tarjeta</button>
+      </div>
+      <div class="manual-lista" id="manualLista"></div>
+      <p class="upload-error oculto" id="manualError"></p>
+      <div class="manual-acciones">
+        <button type="button" class="btn-secundario" id="manualVolverBtn">Volver</button>
+        <button type="button" class="btn-primario" id="manualEmpezarBtn" disabled>Guardar y repasar</button>
+      </div>
+    </div>
+
+    <!-- PASO 2: repaso -->
+    <div class="review-seccion oculto" id="reviewSeccion">
+      <button type="button" class="btn-secundario review-volver" id="cambiarOrigenBtn">← Mis temas</button>
+
+      <div class="review-header">
+        <div class="review-header-info">
+          <h2 class="review-header-titulo" id="reviewNombreTema"></h2>
+          <p class="review-header-subtitulo">Sesión de repaso activa</p>
+        </div>
+        <div class="review-header-progreso">
+          <p class="review-progreso-texto">Progreso: <strong id="reviewContadorActual">0</strong> / <span id="reviewContadorTotal">0</span></p>
+          <button type="button" class="review-reiniciar-icono" id="reiniciarIconoBtn" title="Reiniciar repaso" aria-label="Reiniciar repaso">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 1 2.64 6.36"/><path d="M3 21v-6h6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="review-card" id="reviewCard" role="button" tabindex="0" aria-label="Voltear tarjeta">
+        <button type="button" class="review-audio" id="reviewAudioBtn" title="Escuchar" aria-label="Escuchar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+        </button>
+        <div class="review-card-inner" id="reviewCardInner">
+          <div class="review-card-cara review-card-front">
+            <div class="review-cara">
+              <span class="review-badge">Pregunta</span>
+              <p class="review-texto" id="reviewTextoPregunta"></p>
+              <p class="review-hint">Haz clic en la tarjeta para ver la respuesta</p>
+            </div>
+          </div>
+          <div class="review-card-cara review-card-back">
+            <div class="review-cara">
+              <span class="review-badge">Respuesta</span>
+              <p class="review-texto" id="reviewTextoRespuesta"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-acciones oculto" id="reviewAcciones">
+        <button type="button" class="review-pill review-pill-facil" data-nivel="facil"><span class="review-pill-dot"></span>Fácil</button>
+        <button type="button" class="review-pill review-pill-normal" data-nivel="normal"><span class="review-pill-dot"></span>Normal</button>
+        <button type="button" class="review-pill review-pill-dificil" data-nivel="dificil"><span class="review-pill-dot"></span>Difícil</button>
+        <button type="button" class="review-pill review-pill-nose" data-nivel="nose"><span class="review-pill-dot"></span>No lo sé</button>
+      </div>
+
+      <div class="review-dots" id="reviewDots"></div>
+
+      <div class="review-completo oculto" id="reviewCompleto">
+        <p>¡Terminaste el repaso de este set! 🎉</p>
+        <button type="button" class="btn-primario" id="reiniciarBtn">Repasar de nuevo</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="datastore.js"></script>
+  <script src="auth-guard.js"></script>
+  <script src="flashcards.js"></script>
+</body>
+</html>

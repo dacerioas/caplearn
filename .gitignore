@@ -1,0 +1,22 @@
+# Dependencias
+server/node_modules/
+
+# Variables de entorno (contiene claves de API)
+server/.env
+
+# Base de datos local
+server/caplearn.db
+
+# Archivos subidos por usuarios
+server/uploads/*
+!server/uploads/.gitkeep
+
+# Modelo de OCR (pesado y no usado actualmente)
+server/eng.traineddata
+
+# Configuración local de Claude Code (específica de esta máquina)
+.claude/settings.local.json
+
+# Sistema operativo / editor
+.DS_Store
+Thumbs.db

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CapLearn - Mi Material</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="material.css">
+  <link rel="stylesheet" href="flashcards.css">
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <img src="logo.PNG" alt="CapLearn" class="sidebar-logo">
+
+    <nav class="nav">
+      <a href="dashboard.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        Inicio
+      </a>
+      <a href="flashcards.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2"/></svg>
+        Flashcards
+      </a>
+      <a href="quiz.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        Quiz
+      </a>
+      <a href="chatbot.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+        FlashBot
+      </a>
+      <a href="material.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 13v8"/><path d="m8 17 4-4 4 4"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        Mi Material
+      </a>
+    </nav>
+
+    <div class="perfil">
+      <div class="avatar" id="perfilAvatar">AV</div>
+      <div class="perfil-info">
+        <p class="perfil-nombre" id="perfilNombre">Ana Valdés</p>
+        <p class="perfil-rol">Estudiante</p>
+      </div>
+      <button type="button" class="perfil-salir" id="logoutBtn" title="Cerrar sesión" aria-label="Cerrar sesión">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="contenido">
+
+    <div class="header">
+      <div class="saludo">
+        <h1>Mi Material</h1>
+        <p>Sube tus apuntes y deja que la IA los transforme en material de estudio</p>
+      </div>
+    </div>
+
+    <!-- Biblioteca: tu material guardado -->
+    <div class="tarjeta origen-seccion" id="bibliotecaSeccion">
+      <div class="temas-header">
+        <h3>Tu material</h3>
+        <button type="button" class="btn-primario" id="agregarMaterialBtn">+ Agregar material nuevo</button>
+      </div>
+      <div class="temas-lista" id="materialesLista"></div>
+      <p class="origen-vacio oculto" id="bibliotecaVacia">Todavía no has subido ningún material.</p>
+    </div>
+
+    <!-- Paso 1: subir archivo o pegar texto -->
+    <div class="tarjeta material-upload oculto" id="uploadCard">
+      <button type="button" class="btn-secundario volver-biblioteca-btn" id="volverBibliotecaDesdeUploadBtn">← Tu material</button>
+      <div class="upload-tabs">
+        <button type="button" class="upload-tab activo" data-tab="archivo">Subir archivo</button>
+        <button type="button" class="upload-tab" data-tab="texto">Pegar texto</button>
+      </div>
+
+      <div class="upload-panel" data-panel="archivo">
+        <label class="dropzone" id="dropzone" for="fileInput">
+          <svg class="dropzone-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 13v8"/><path d="m8 17 4-4 4 4"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+          <p class="dropzone-titulo">Arrastra tu archivo aquí</p>
+          <p class="dropzone-subtitulo">o haz clic para seleccionar — PDF, Word, PowerPoint o TXT (máx. 20MB)</p>
+          <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.md" hidden>
+        </label>
+        <p class="upload-error oculto" id="fileError"></p>
+      </div>
+
+      <div class="upload-panel oculto" data-panel="texto">
+        <textarea id="textInput" class="texto-pegado" placeholder="Pega aquí el texto de tus apuntes..."></textarea>
+        <button type="button" class="btn-primario" id="submitTextBtn">Analizar texto</button>
+      </div>
+    </div>
+
+    <!-- Cargando extracción de archivo -->
+    <div class="tarjeta material-loading oculto" id="loadingCard">
+      <div class="spinner"></div>
+      <p id="loadingTexto">Extrayendo el contenido de tu archivo...</p>
+    </div>
+
+    <!-- Paso 2: material listo + acciones de IA -->
+    <div class="material-resultado oculto" id="resultadoSeccion">
+
+      <div class="tarjeta material-resumen-archivo">
+        <div>
+          <p class="material-nombre-archivo" id="nombreArchivo">Texto pegado</p>
+          <p class="material-conteo" id="conteoTexto"></p>
+        </div>
+        <button type="button" class="btn-secundario" id="nuevoMaterialBtn">← Tu material</button>
+      </div>
+
+      <div class="tarjeta">
+        <h3>¿Qué quieres generar?</h3>
+        <div class="acciones-ia">
+          <button type="button" class="accion-ia" data-type="flashcards">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2"/></svg>
+            Flashcards
+          </button>
+          <button type="button" class="accion-ia" data-type="summary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+            Resumen
+          </button>
+          <button type="button" class="accion-ia" data-type="quiz">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+            Quiz
+          </button>
+          <button type="button" class="accion-ia" data-type="key-concepts">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>
+            Conceptos clave
+          </button>
+          <button type="button" class="accion-ia" data-type="practice-questions">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+            Preguntas de práctica
+          </button>
+        </div>
+      </div>
+
+      <!-- Cargando generación IA -->
+      <div class="tarjeta material-loading oculto" id="aiLoadingCard">
+        <div class="spinner"></div>
+        <p>La IA está analizando tu material...</p>
+      </div>
+
+      <!-- Error de generación -->
+      <div class="tarjeta material-error oculto" id="aiErrorCard">
+        <p id="aiErrorText"></p>
+      </div>
+
+      <!-- Resultado de la IA -->
+      <div class="tarjeta oculto" id="aiResultCard">
+        <div class="resultado-header">
+          <h3 id="resultadoTitulo"></h3>
+          <button type="button" class="btn-secundario" id="regenerarBtn">Regenerar</button>
+        </div>
+        <div id="resultadoContenido"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="datastore.js"></script>
+  <script src="auth-guard.js"></script>
+  <script src="material.js"></script>
+</body>
+</html>

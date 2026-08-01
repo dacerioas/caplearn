@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "caplearn-server",
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+      "runtimeArgs": ["C:\\Users\\dcede\\Desktop\\mi-app-estudio\\server\\server.js"],
+      "port": 3000
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CapLearn - Quiz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="material.css">
+  <link rel="stylesheet" href="flashcards.css">
+  <link rel="stylesheet" href="quiz.css">
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <img src="logo.PNG" alt="CapLearn" class="sidebar-logo">
+
+    <nav class="nav">
+      <a href="dashboard.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        Inicio
+      </a>
+      <a href="flashcards.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2"/></svg>
+        Flashcards
+      </a>
+      <a href="quiz.html" class="nav-item activo">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        Quiz
+      </a>
+      <a href="chatbot.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+        FlashBot
+      </a>
+      <a href="material.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 13v8"/><path d="m8 17 4-4 4 4"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        Mi Material
+      </a>
+    </nav>
+
+    <div class="perfil">
+      <div class="avatar" id="perfilAvatar">AV</div>
+      <div class="perfil-info">
+        <p class="perfil-nombre" id="perfilNombre">Ana Valdés</p>
+        <p class="perfil-rol">Estudiante</p>
+      </div>
+      <button type="button" class="perfil-salir" id="logoutBtn" title="Cerrar sesión" aria-label="Cerrar sesión">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="contenido">
+
+    <div class="header">
+      <div class="saludo">
+        <h1>Quiz</h1>
+        <p>Pon a prueba lo que has aprendido</p>
+      </div>
+    </div>
+
+    <!-- PASO 1: elegir tema -->
+    <div class="tarjeta origen-seccion" id="origenSeccion">
+      <h3>Tus temas</h3>
+      <div class="temas-lista" id="quizzesLista"></div>
+      <p class="origen-vacio oculto" id="origenVacio">Todavía no tienes material subido. <a href="material.html">Sube uno en Mi Material</a>.</p>
+    </div>
+
+    <!-- Generando quiz para un tema que aún no lo tenía -->
+    <div class="tarjeta material-loading oculto" id="generandoCard">
+      <div class="spinner"></div>
+      <p>Generando quiz con IA...</p>
+    </div>
+    <p class="upload-error oculto" id="generandoError"></p>
+
+    <!-- PASO 2: tomar el quiz -->
+    <div class="review-seccion oculto" id="tomarSeccion">
+      <div class="review-topbar">
+        <button type="button" class="btn-secundario" id="volverListaBtn">← Tus quizzes</button>
+        <p class="review-nombre-tema" id="quizNombreActual"></p>
+        <p class="review-contador" id="quizContador"></p>
+      </div>
+
+      <div class="quiz-pregunta-card" id="preguntaCard">
+        <p class="quiz-enunciado" id="preguntaTexto"></p>
+        <div class="quiz-opciones" id="opcionesContenedor"></div>
+        <p class="quiz-explicacion oculto" id="explicacionTexto"></p>
+        <button type="button" class="btn-primario oculto" id="siguienteBtn">Siguiente pregunta</button>
+      </div>
+
+      <div class="quiz-resultado oculto" id="resultadoFinal">
+        <div class="quiz-resultado-circulo">
+          <span id="resultadoPuntaje">0%</span>
+        </div>
+        <p class="quiz-resultado-texto" id="resultadoTexto"></p>
+        <div class="quiz-resultado-acciones">
+          <button type="button" class="btn-secundario" id="reintentarBtn">Reintentar</button>
+          <button type="button" class="btn-primario" id="terminarBtn">Volver a mis quizzes</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="datastore.js"></script>
+  <script src="auth-guard.js"></script>
+  <script src="quiz.js"></script>
+</body>
+</html>

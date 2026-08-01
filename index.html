@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+ <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CapLearn</title>
+
+</head>
+<body>
+
+  <!-- Contenedor principal que divide la pantalla en dos -->
+  <div class="contenedor">
+
+    <!-- LADO IZQUIERDO: logo, título y descripción -->
+    <div class="lado-izquierdo">
+      <!-- Cambia "logo.png" por el nombre exacto de tu archivo -->
+      <img src="logo.PNG" alt="CapLearn logo" class="logo">
+
+      <h1>Expande tus <span class="azul">límites</span></h1>
+      <p class="slogan">El mejor compañero de estudio</p>
+
+      <!-- Las 3 características debajo del slogan -->
+      <div class="features">
+        <div class="feature">
+          <img src="flashcards_logo.PNG" alt="Flashcards" class="icono_feature-img">
+          <div>
+            <strong>Flashcards inteligentes</strong>
+            <p>Crea y practica con tarjetas adaptadas a ti.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <img src="flashbot_logo.PNG" alt="FlashBot" class="icono_feature-img">
+          <div>
+            <strong>FlashBot</strong>
+            <p>Tu asistente de estudio disponible 24/7.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <img src="quiz_logo.PNG" alt="Quiz" class="icono_feature-img">
+          <div>
+            <strong>Quices</strong>
+            <p>Pon a prueba tu conocimiento.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LADO DERECHO: formulario de login -->
+    <div class="lado-derecho">
+      <div class="form-box">
+
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab activo" data-tab="login">Iniciar sesión</button>
+          <button type="button" class="auth-tab" data-tab="registro">Crear cuenta</button>
+        </div>
+
+        <!-- Formulario de inicio de sesión -->
+        <form id="loginForm" class="auth-panel">
+          <h2>Bienvenido de nuevo</h2>
+          <p class="subtitulo">Inicia sesión para continuar aprendiendo</p>
+
+          <div class="input-grupo">
+            <img src="mail_icon.PNG" alt="Correo" class="icono-img">
+            <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
+          </div>
+
+          <div class="input-grupo">
+            <img src="lock_icon.PNG" alt="Contraseña" class="icono-img">
+            <input type="password" id="loginPassword" placeholder="Contraseña" required>
+          </div>
+
+          <div class="opciones">
+            <label><input type="checkbox"> Recordarme</label>
+            <a href="#">¿Olvidaste tu contraseña?</a>
+          </div>
+
+          <p class="auth-error oculto" id="loginError"></p>
+
+          <button type="submit" class="btn-login" id="loginBtn">Iniciar Sesión</button>
+        </form>
+
+        <!-- Formulario de registro -->
+        <form id="registroForm" class="auth-panel oculto">
+          <h2>Crea tu cuenta</h2>
+          <p class="subtitulo">Empieza a estudiar con CapLearn</p>
+
+          <div class="input-grupo">
+            <input type="text" id="registroNombre" placeholder="Nombre completo" required>
+          </div>
+
+          <div class="input-grupo">
+            <img src="mail_icon.PNG" alt="Correo" class="icono-img">
+            <input type="email" id="registroEmail" placeholder="Correo electrónico" required>
+          </div>
+
+          <div class="input-grupo">
+            <img src="lock_icon.PNG" alt="Contraseña" class="icono-img">
+            <input type="password" id="registroPassword" placeholder="Contraseña (mínimo 6 caracteres)" required>
+          </div>
+
+          <p class="auth-error oculto" id="registroError"></p>
+
+          <button type="submit" class="btn-login" id="registroBtn">Crear cuenta</button>
+        </form>
+
+        <!-- Separador -->
+        <div class="separador">
+          <span>o continúa con</span>
+        </div>
+
+        <!-- Botones de Google y Apple -->
+        <div class="botones-sociales">
+          <button type="button" class="btn-social">
+            <img src="logo_google.png" alt="Google" width="18">
+            Continuar con Google
+          </button>
+          <button type="button" class="btn-social">
+            <img src="logo_apple.png" alt="Apple" width="19">
+            Continuar con Apple
+          </button>
+        </div>
+
+        <!-- Términos -->
+        <p class="terminos">Al continuar, aceptas nuestros
+          <a href="#">Términos de servicio</a> y
+          <a href="#">Política de privacidad</a>
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>

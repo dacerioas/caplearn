@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CapLearn - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <img src="logo.PNG" alt="CapLearn" class="sidebar-logo">
+
+    <nav class="nav">
+      <a href="dashboard.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        Inicio
+      </a>
+      <a href="flashcards.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2"/></svg>
+        Flashcards
+      </a>
+      <a href="quiz.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        Quiz
+      </a>
+      <a href="chatbot.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+        FlashBot
+      </a>
+      <a href="material.html" class="nav-item">
+        <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 13v8"/><path d="m8 17 4-4 4 4"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        Mi Material
+      </a>
+    </nav>
+
+    <div class="perfil">
+      <div class="avatar" id="perfilAvatar">AV</div>
+      <div class="perfil-info">
+        <p class="perfil-nombre" id="perfilNombre">Ana Valdés</p>
+        <p class="perfil-rol">Estudiante</p>
+      </div>
+      <button type="button" class="perfil-salir" id="logoutBtn" title="Cerrar sesión" aria-label="Cerrar sesión">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="contenido">
+
+    <!-- Header: saludo + búsqueda + notificación -->
+    <div class="header">
+      <div class="saludo">
+        <h1>¡Hola, <span id="saludoNombre">Ana</span>!</h1>
+        <p>¿Qué te gustaría aprender hoy?</p>
+      </div>
+      <div class="header-derecha">
+        <div class="buscador">
+          <span class="buscar-icono">🔍</span>
+          <input type="text" placeholder="Buscar temas, flashcards...">
+        </div>
+        <div class="notificacion">🔔</div>
+      </div>
+    </div>
+
+    <!-- Tu progreso -->
+    <div class="tarjeta progreso-tarjeta">
+      <h3>Tu progreso</h3>
+      <div class="progreso-contenido">
+        <div class="progreso-anillo">
+          <svg class="anillo-svg" viewBox="0 0 120 120">
+            <circle class="anillo-fondo" cx="60" cy="60" r="52"></circle>
+            <circle class="anillo-relleno" id="anilloRelleno" cx="60" cy="60" r="52" data-porcentaje="0"></circle>
+          </svg>
+          <div class="anillo-texto">
+            <span class="porcentaje" id="porcentajeTexto">0%</span>
+            <span class="completado-txt">Completado</span>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-tile">
+            <span class="stat-num" id="statTarjetas">0</span>
+            <span class="stat-label">Tarjetas completadas</span>
+          </div>
+          <div class="stat-tile">
+            <span class="stat-num" id="statRacha">0</span>
+            <span class="stat-label">Días racha</span>
+          </div>
+          <div class="stat-tile">
+            <span class="stat-num" id="statTemas">0</span>
+            <span class="stat-label">Temas completados</span>
+          </div>
+          <div class="stat-tile stat-correcta">
+            <span class="stat-num" id="statCorrectas">0</span>
+            <span class="stat-label">Respuestas correctas</span>
+          </div>
+          <div class="stat-tile stat-incorrecta">
+            <span class="stat-num" id="statIncorrectas">0</span>
+            <span class="stat-label">Respuestas incorrectas</span>
+          </div>
+          <div class="stat-tile">
+            <span class="stat-num" id="statDominio">0%</span>
+            <span class="stat-label">Dominio del tema</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tus temas -->
+    <div class="tarjeta temas-seccion">
+      <h3>Tus temas</h3>
+      <div class="temas-dashboard-grid" id="temasDashboardGrid"></div>
+      <div class="temas-dashboard-vacio oculto" id="temasDashboardVacio">
+        <p>Todavía no has subido ningún material.</p>
+        <a href="material.html" class="btn-continuar">Ir a Mi Material</a>
+      </div>
+    </div>
+
+    <!-- Flashcards recientes -->
+    <div class="tarjeta flashcards-recientes" id="flashcards-recientes">
+      <div class="flashcards-header">
+        <h3>Flashcards recientes</h3>
+        <a href="flashcards.html" class="ver-todas">Ver todas</a>
+      </div>
+      <div class="flashcards-grid" id="flashcardsGrid"></div>
+      <p class="flashcards-vacio oculto" id="flashcardsVacio">Sube material en "Mi Material" o crea tarjetas manuales para verlas aquí.</p>
+    </div>
+
+    <!-- FlashBot -->
+    <div class="tarjeta flashbot-seccion" id="flashbot-seccion">
+      <img src="fllashbot_logo_white.PNG" alt="FlashBot" class="flashbot-img">
+      <div class="flashbot-info">
+        <h3>FlashBot</h3>
+        <p>Tu asistente de estudio con IA.</p>
+        <p>Pregúntame cualquier duda o pide ayuda con tus temas.</p>
+      </div>
+      <a href="chatbot.html" class="btn-flashbot">Iniciar conversación</a>
+    </div>
+
+  </div>
+
+  <script src="datastore.js"></script>
+  <script src="auth-guard.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

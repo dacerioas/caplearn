@@ -1,0 +1,345 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Aoboshi+One&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
+:root {
+    --color-primario: #1A62F4;
+    --color-secundario: #FFFFFF;
+    --color-fondo: #080F1A;
+
+    --font-principal: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  
+ /* Reset: elimina márgenes y paddings por defecto del navegador */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Fondo general y fuente base */
+body {
+  background-color: var(--color-fondo);
+  font-family: var(--font-principal);
+  font-weight: 400;
+  height: 100vh;
+  display: flex;
+  position: relative;
+}
+
+.header{
+    padding: 4% 0% 0% 12%
+
+}
+
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('login_background.PNG');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.15; /* Ajusta la opacidad según tus necesidades */
+  z-index: -1; /* Asegura que el fondo esté detrás del contenido */
+}
+
+/* Divide la pantalla en dos columnas */
+.contenedor {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+/* ========================
+   LADO IZQUIERDO
+======================== */
+.lado-izquierdo {
+  width: 50%;
+  padding: 70px;
+  padding-left: 250px;
+  color: var(--color-secundario);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Logo */
+.logo {
+  width: 154px;
+  height: auto;
+  margin-top: -80px;
+  margin-bottom: 20px;
+}
+
+/* Título principal */
+.lado-izquierdo h1 {
+  font-size: 54px;
+  font-weight: 600;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+
+/* La palabra azul en el título */
+.azul {
+  color: var(--color-primario);
+}
+
+/* Slogan debajo del título */
+.slogan {
+  font-size: 20px;
+  color: #a0aec0;
+  margin-bottom: 40px;
+}
+
+/* Contenedor de las 3 features */
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* Cada feature individual */
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #cbd5e0;
+  font-size: 17px;
+}
+
+.feature strong {
+  display: block;
+  color: var(--color-secundario);
+  font-size: 20px;
+  margin-bottom: 2px;
+}
+
+.icono {
+  font-size: 22px;
+  margin-top: 2px;
+}
+
+.icono-img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.icono_feature-img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  background-color: #1a2035;
+  padding: 10px;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+/* ========================
+   LADO DERECHO
+======================== */
+.lado-derecho {
+  width: 50%;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  padding-right: 250px;
+}
+
+/* Caja del formulario */
+.form-box {
+  background-color: #111827;
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 650px;
+  color: var(--color-secundario);
+}
+
+.form-box h2 {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.oculto {
+  display: none !important;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 8px;
+  background-color: #1a2035;
+  border-radius: 12px;
+  padding: 6px;
+  margin-bottom: 24px;
+}
+
+.auth-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #a0aec0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.auth-tab.activo {
+  background-color: var(--color-primario);
+  color: white;
+}
+
+.auth-error {
+  color: #f56565;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.subtitulo {
+  color: #a0aec0;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 16px;
+}
+
+/* Cada campo de input */
+.input-grupo {
+  display: flex;
+  align-items: center;
+  background-color: #1a2035;
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  gap: 10px;
+}
+
+.input-grupo input {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--color-secundario);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  width: 100%;
+}
+
+.input-grupo input::placeholder {
+  color: #4a5568;
+}
+
+/* Recordarme y olvidaste contraseña */
+.opciones {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #a0aec0;
+}
+
+.opciones a {
+  color: var(--color-primario);
+  text-decoration: none;
+}
+
+/* Botón principal de login */
+.btn-login {
+  width: 100%;
+  padding: 16px;
+  background-color: var(--color-primario);
+  color: var(--color-secundario);
+  border: none;
+  border-radius: 10px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background-color 0.2s;
+}
+
+.btn-login:hover {
+  background-color: var(--color-primario);
+}
+
+/* Separador "o continúa con" */
+.separador {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #4a5568;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.separador::before,
+.separador::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: #2d3748;
+}
+
+/* Botones de Google y Apple */
+.botones-sociales {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.btn-social {
+  flex: 1;
+  padding: 12px;
+  background-color: #1a2035;
+  color: var(--color-secundario);
+  border: none;
+  border-radius: 10px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.btn-social:hover {
+  background-color: #2d3748;
+}
+
+/* Enlace de registro */
+.registro {
+  text-align: center;
+  color: #a0aec0;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.registro a {
+  color: var(--color-primario);
+  text-decoration: none;
+}
+
+/* Términos de servicio */
+.terminos {
+  text-align: center;
+  color: #4a5568;
+  font-size: 12px;
+}
+
+.terminos a {
+  color: var(--color-primario);
+  text-decoration: none;
+}
