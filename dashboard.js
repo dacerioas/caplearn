@@ -32,15 +32,44 @@ function escaparHtml(texto) {
 
 const ETIQUETA_DIFICULTAD = { facil: "Fácil", medio: "Medio", dificil: "Difícil" };
 
-function renderFlashcardReciente(tarjeta, materialId) {
+const CATEGORIAS_VALIDAS = new Set(["Ciencias", "Historia", "Geografía", "Matemáticas", "Literatura", "Otro"]);
+
+const CATEGORIA_INFO = {
+  Ciencias: {
+    color: "#9f7aea",
+    icono: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v5.5L4.5 18a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 8.5V3"/></svg>`,
+  },
+  Historia: {
+    color: "#ed8936",
+    icono: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>`,
+  },
+  Geografía: {
+    color: "#1A62F4",
+    icono: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+  },
+  Matemáticas: {
+    color: "#38b2ac",
+    icono: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 21 9-18 9 18"/><path d="M8 13h8"/></svg>`,
+  },
+  Literatura: {
+    color: "#48bb78",
+    icono: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+  },
+  Otro: {
+    color: "#a0aec0",
+    icono: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>`,
+  },
+};
+
+function renderFlashcardReciente(tarjeta, material) {
   const dificultad = tarjeta.difficulty || "facil";
-  const href = materialId ? `flashcards.html?tema=${encodeURIComponent(materialId)}` : "flashcards.html";
+  const href = material ? `flashcards.html?tema=${encodeURIComponent(material.id)}` : "flashcards.html";
+  const categoria = CATEGORIAS_VALIDAS.has(material && material.categoria) ? material.categoria : "Otro";
+  const info = CATEGORIA_INFO[categoria];
   return `
     <div class="flashcard">
       <p class="fc-pregunta">${escaparHtml(tarjeta.question)}</p>
-      <div class="fc-icono fc-icono-generico">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      </div>
+      <div class="fc-icono" style="color:${info.color}">${info.icono}</div>
       <p class="fc-respuesta">${escaparHtml(tarjeta.answer)}</p>
       <div class="fc-footer">
         <span class="fc-materia">${escaparHtml(tarjeta.subject || "")}</span>
@@ -180,16 +209,22 @@ function contarCompletadas(tema, srs) {
   }
 
   // ---------- Flashcards recientes ----------
+  // Toma 1 tarjeta de cada uno de los temas más recientes (no 4 del mismo tema),
+  // así los íconos de categoría realmente varían de una tarjeta a otra.
   const flashcardsGrid = document.getElementById("flashcardsGrid");
   const flashcardsVacio = document.getElementById("flashcardsVacio");
 
-  const temaMasReciente = [...materiales]
+  const temasConFlashcards = [...materiales]
     .filter((m) => (m.flashcards || []).length > 0)
-    .sort((a, b) => new Date(b.creadoEn || 0) - new Date(a.creadoEn || 0))[0];
-  const recientes = temaMasReciente ? temaMasReciente.flashcards.slice(0, 4) : [];
+    .sort((a, b) => new Date(b.creadoEn || 0) - new Date(a.creadoEn || 0))
+    .slice(0, 4);
+
+  const recientes = temasConFlashcards.map((material) => ({ tarjeta: material.flashcards[0], material }));
 
   if (recientes.length) {
-    flashcardsGrid.innerHTML = recientes.map((tarjeta) => renderFlashcardReciente(tarjeta, temaMasReciente.id)).join("");
+    flashcardsGrid.innerHTML = recientes
+      .map(({ tarjeta, material }) => renderFlashcardReciente(tarjeta, material))
+      .join("");
     flashcardsVacio.classList.add("oculto");
   } else {
     flashcardsGrid.innerHTML = "";
