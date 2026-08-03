@@ -61,16 +61,22 @@
         <h1>Flashcards</h1>
         <p>Repasa tus tarjetas con repetición espaciada</p>
       </div>
+      <div class="header-derecha" id="origenBuscadorWrap">
+        <div class="temas-buscador">
+          <span class="buscar-icono">🔍</span>
+          <input type="text" id="temasBuscador" placeholder="Buscar temas...">
+        </div>
+      </div>
     </div>
 
     <!-- PASO 1: elegir tema -->
-    <div class="tarjeta origen-seccion" id="origenSeccion">
-      <div class="temas-header">
-        <h3>Tus temas</h3>
+    <div class="origen-seccion" id="origenSeccion">
+      <div class="categoria-filtros" id="categoriaFiltros"></div>
+      <div class="temas-cards-grid" id="temasLista"></div>
+      <p class="origen-vacio oculto" id="origenVacio">Todavía no tienes ningún tema. <a href="material.html">Sube material</a> o crea uno manualmente.</p>
+      <div class="temas-footer-acciones">
         <button type="button" class="btn-primario" id="crearManualBtn">+ Crear tema manual</button>
       </div>
-      <div class="temas-lista" id="temasLista"></div>
-      <p class="origen-vacio oculto" id="origenVacio">Todavía no tienes ningún tema. <a href="material.html">Sube material</a> o crea uno manualmente.</p>
     </div>
 
     <!-- Generando flashcards para un tema que aún no las tenía -->

@@ -3,9 +3,40 @@
   const ICONO_LAPIZ = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>`;
   const LETRAS = ["A", "B", "C", "D", "E", "F"];
 
+  const CATEGORIAS_VALIDAS = new Set(["Ciencias", "Historia", "Geografía", "Matemáticas", "Literatura", "Otro"]);
+
+  const CATEGORIA_INFO = {
+    Ciencias: {
+      color: "#9f7aea",
+      icono: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v5.5L4.5 18a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 8.5V3"/></svg>`,
+    },
+    Historia: {
+      color: "#ed8936",
+      icono: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>`,
+    },
+    Geografía: {
+      color: "#1A62F4",
+      icono: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+    },
+    Matemáticas: {
+      color: "#38b2ac",
+      icono: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 21 9-18 9 18"/><path d="M8 13h8"/></svg>`,
+    },
+    Literatura: {
+      color: "#48bb78",
+      icono: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+    },
+    Otro: {
+      color: "#a0aec0",
+      icono: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>`,
+    },
+  };
+
   const origenSeccion = document.getElementById("origenSeccion");
   const origenVacio = document.getElementById("origenVacio");
   const quizzesLista = document.getElementById("quizzesLista");
+  const categoriaFiltros = document.getElementById("categoriaFiltros");
+  const temasBuscador = document.getElementById("temasBuscador");
 
   const generandoCard = document.getElementById("generandoCard");
   const generandoError = document.getElementById("generandoError");
@@ -74,49 +105,119 @@
     return pregunta.type || "opcion_multiple";
   }
 
+  function normalizar(texto) {
+    return texto
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "");
+  }
+
+  let categoriaActiva = "Todos";
+
   // ---------- Lista de temas ----------
   async function cargarMateriales() {
     const todos = await obtenerMateriales();
     materialesCache = todos.filter((m) => m.texto || m.quiz);
+    renderizarFiltros();
     renderizarLista();
+  }
+
+  function renderizarFiltros() {
+    const categoriasPresentes = [...new Set(materialesCache.map((m) => m.categoria || "Otro"))];
+    const categorias = ["Todos", ...categoriasPresentes];
+
+    categoriaFiltros.innerHTML = categorias
+      .map(
+        (cat) =>
+          `<button type="button" class="categoria-pill ${cat === categoriaActiva ? "activo" : ""}" data-cat="${escaparHtml(cat)}">${escaparHtml(cat)}</button>`
+      )
+      .join("");
+
+    categoriaFiltros.querySelectorAll(".categoria-pill").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        categoriaActiva = btn.dataset.cat;
+        renderizarFiltros();
+        renderizarLista();
+      });
+    });
+  }
+
+  function materialesFiltrados() {
+    const termino = normalizar(temasBuscador.value.trim());
+    return materialesCache.filter((m) => {
+      const coincideCategoria = categoriaActiva === "Todos" || (m.categoria || "Otro") === categoriaActiva;
+      const coincideBusqueda = !termino || normalizar(m.nombre).includes(termino);
+      return coincideCategoria && coincideBusqueda;
+    });
+  }
+
+  function tarjetaMaterialHtml(material) {
+    const categoria = CATEGORIAS_VALIDAS.has(material.categoria) ? material.categoria : "Otro";
+    const info = CATEGORIA_INFO[categoria];
+    const totalPreguntas = material.quiz ? material.quiz.length : 0;
+    const porcentaje = material.mejorPuntaje != null ? material.mejorPuntaje : 0;
+    const meta = material.quiz
+      ? material.mejorPuntaje != null
+        ? `${totalPreguntas} preguntas · Mejor puntaje: ${material.mejorPuntaje}%`
+        : `${totalPreguntas} preguntas · Sin intentar`
+      : "Clic para generar quiz";
+
+    return `
+    <div class="tema-card" data-id="${escaparHtml(material.id)}" role="button" tabindex="0">
+      <button type="button" class="tema-card-editar" data-id="${escaparHtml(material.id)}" title="Renombrar tema" aria-label="Renombrar tema">${ICONO_LAPIZ}</button>
+      <div class="tema-card-top">
+        <div class="tema-card-icono" style="background-color:${info.color}26; color:${info.color}">${info.icono}</div>
+        <span class="tema-card-categoria" style="color:${info.color}">${escaparHtml(categoria)}</span>
+      </div>
+      <p class="tema-card-titulo">${escaparHtml(material.nombre)}</p>
+      <p class="tema-card-desc">${escaparHtml(material.descripcion || "")}</p>
+      <div class="tema-card-progreso-fila">
+        <span>Mejor puntaje</span>
+        <span>${material.mejorPuntaje != null ? porcentaje + "%" : "—"}</span>
+      </div>
+      <div class="tema-card-barra"><div class="tema-card-barra-relleno" style="width:${porcentaje}%"></div></div>
+      <div class="tema-card-footer">${ICONO_QUIZ} ${meta}</div>
+    </div>`;
   }
 
   function renderizarLista() {
     if (!materialesCache.length) {
       quizzesLista.innerHTML = "";
+      origenVacio.textContent = "Todavía no tienes material subido. Sube uno en Mi Material.";
+      origenVacio.classList.remove("oculto");
+      return;
+    }
+
+    const filtrados = materialesFiltrados();
+
+    if (!filtrados.length) {
+      quizzesLista.innerHTML = "";
+      origenVacio.textContent = "Ningún tema coincide con tu búsqueda.";
       origenVacio.classList.remove("oculto");
       return;
     }
 
     origenVacio.classList.add("oculto");
-    quizzesLista.innerHTML = materialesCache
-      .map((material, i) => {
-        const meta = material.quiz
-          ? material.mejorPuntaje != null
-            ? `${material.quiz.length} preguntas · Mejor puntaje: ${material.mejorPuntaje}%`
-            : `${material.quiz.length} preguntas · Sin intentar`
-          : "Clic para generar quiz";
-        return `
-        <div class="tema-item">
-          <button type="button" class="tema-item-click" data-indice="${i}">
-            <div class="tema-item-icono">${ICONO_QUIZ}</div>
-            <div class="tema-item-info">
-              <p class="tema-item-nombre">${escaparHtml(material.nombre)}</p>
-              <p class="tema-item-meta">${meta}</p>
-            </div>
-          </button>
-          <button type="button" class="tema-item-editar" data-indice="${i}" title="Renombrar tema" aria-label="Renombrar tema">${ICONO_LAPIZ}</button>
-        </div>`;
-      })
-      .join("");
+    quizzesLista.innerHTML = filtrados.map(tarjetaMaterialHtml).join("");
 
-    quizzesLista.querySelectorAll(".tema-item-click").forEach((btn) => {
-      btn.addEventListener("click", () => seleccionarMaterial(materialesCache[Number(btn.dataset.indice)]));
+    quizzesLista.querySelectorAll(".tema-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        const material = materialesCache.find((m) => m.id === card.dataset.id);
+        if (material) seleccionarMaterial(material);
+      });
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          card.click();
+        }
+      });
     });
 
-    quizzesLista.querySelectorAll(".tema-item-editar").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        const material = materialesCache[Number(btn.dataset.indice)];
+    quizzesLista.querySelectorAll(".tema-card-editar").forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        const material = materialesCache.find((m) => m.id === btn.dataset.id);
+        if (!material) return;
         const nuevoNombre = prompt("Nuevo nombre para el tema:", material.nombre);
         if (!nuevoNombre || !nuevoNombre.trim() || nuevoNombre.trim() === material.nombre) return;
 
@@ -126,6 +227,8 @@
       });
     });
   }
+
+  temasBuscador.addEventListener("input", renderizarLista);
 
   async function persistirMaterial(material) {
     const todos = await obtenerMateriales();

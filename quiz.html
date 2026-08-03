@@ -62,13 +62,22 @@
         <h1>Quiz</h1>
         <p>Pon a prueba lo que has aprendido</p>
       </div>
+      <div class="header-derecha">
+        <div class="temas-buscador">
+          <span class="buscar-icono">🔍</span>
+          <input type="text" id="temasBuscador" placeholder="Buscar temas...">
+        </div>
+      </div>
     </div>
 
     <!-- PASO 1: elegir tema -->
-    <div class="tarjeta origen-seccion" id="origenSeccion">
-      <h3>Tus temas</h3>
-      <div class="temas-lista" id="quizzesLista"></div>
+    <div class="origen-seccion" id="origenSeccion">
+      <div class="categoria-filtros" id="categoriaFiltros"></div>
+      <div class="temas-cards-grid" id="quizzesLista"></div>
       <p class="origen-vacio oculto" id="origenVacio">Todavía no tienes material subido. <a href="material.html">Sube uno en Mi Material</a>.</p>
+      <div class="temas-footer-acciones">
+        <a href="material.html" class="btn-primario">+ Subir material</a>
+      </div>
     </div>
 
     <!-- Generando quiz para un tema que aún no lo tenía -->

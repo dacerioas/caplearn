@@ -44,8 +44,11 @@ const TASK_PROMPTS = {
   },
   "topic-title": {
     instruction:
-      "Genera un título corto y descriptivo (máximo 6 palabras) que resuma el tema principal de este material de estudio. No uses comillas ni punto final.",
-    schema: `{"titulo": string}`,
+      "Genera metadatos para este material de estudio: " +
+      "1) un título corto y descriptivo (máximo 6 palabras, sin comillas ni punto final); " +
+      "2) una categoría, eligiendo EXACTAMENTE una de estas opciones: Ciencias, Historia, Geografía, Matemáticas, Literatura, Otro; " +
+      "3) una descripción de una sola frase (máximo 110 caracteres) que resuma de qué trata el material.",
+    schema: `{"titulo": string, "categoria": "Ciencias"|"Historia"|"Geografía"|"Matemáticas"|"Literatura"|"Otro", "descripcion": string}`,
   },
 };
 

@@ -118,6 +118,211 @@
   color: #1A62F4;
 }
 
+/* ========================
+   Selección de tema: tarjetas con categoría (Flashcards / Quiz)
+======================== */
+.temas-buscador {
+  display: flex;
+  align-items: center;
+  background-color: #0d1530;
+  border-radius: 10px;
+  padding: 10px 16px;
+  gap: 10px;
+  width: 260px;
+  flex-shrink: 0;
+}
+
+.temas-buscador input {
+  background: none;
+  border: none;
+  outline: none;
+  color: white;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  width: 100%;
+}
+
+.temas-buscador input::placeholder {
+  color: #4a5568;
+}
+
+.categoria-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.categoria-pill {
+  background-color: #1a2035;
+  color: #cbd5e0;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.categoria-pill:hover {
+  color: white;
+}
+
+.categoria-pill.activo {
+  background-color: #1A62F4;
+  color: white;
+}
+
+.temas-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.tema-card {
+  position: relative;
+  min-width: 0;
+  background-color: #0d1530;
+  border: 1px solid #1a2035;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: left;
+  cursor: pointer;
+  color: white;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: border-color 0.2s, transform 0.15s;
+}
+
+.tema-card:hover {
+  border-color: #1A62F4;
+  transform: translateY(-3px);
+}
+
+.tema-card-editar {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: #4a5568;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.tema-card-editar:hover {
+  background-color: rgba(26, 98, 244, 0.15);
+  color: #1A62F4;
+}
+
+.tema-card-editar svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
+
+.tema-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.tema-card-icono {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tema-card-icono svg {
+  width: 20px;
+  height: 20px;
+}
+
+.tema-card-categoria {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-right: 22px;
+}
+
+.tema-card-titulo {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tema-card-desc {
+  font-size: 13px;
+  color: #a0aec0;
+  line-height: 1.4;
+  min-height: 36px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.tema-card-progreso-fila {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #a0aec0;
+  margin-bottom: 6px;
+}
+
+.tema-card-progreso-fila span:last-child {
+  font-weight: 700;
+}
+
+.tema-card-barra {
+  background-color: #1a2035;
+  border-radius: 10px;
+  height: 5px;
+  margin-bottom: 14px;
+}
+
+.tema-card-barra-relleno {
+  background-color: #1A62F4;
+  height: 100%;
+  border-radius: 10px;
+}
+
+.tema-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #718096;
+  border-top: 1px solid #1a2035;
+  padding-top: 12px;
+}
+
+.tema-card-footer svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.temas-footer-acciones {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
 .manual-nombre-fila {
   display: flex;
   gap: 10px;
@@ -522,6 +727,18 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+  }
+
+  .temas-buscador {
+    width: 100%;
+  }
+
+  .temas-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .temas-footer-acciones .btn-primario {
+    width: 100%;
   }
 
   .temas-header .btn-primario {

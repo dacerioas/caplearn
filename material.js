@@ -158,7 +158,9 @@
 
   const EXTENSIONES_VALIDAS = [".pdf", ".doc", ".docx", ".ppt", ".pptx", ".txt", ".md"];
 
-  async function generarTituloTema(texto, tituloPorDefecto, intentos = 2) {
+  const CATEGORIAS_VALIDAS = new Set(["Ciencias", "Historia", "Geografía", "Matemáticas", "Literatura", "Otro"]);
+
+  async function generarMetadatosTema(texto, tituloPorDefecto, intentos = 2) {
     for (let intento = 1; intento <= intentos; intento++) {
       try {
         const res = await fetch("/api/material/generate", {
@@ -168,13 +170,14 @@
         });
         const data = await res.json();
         if (res.ok && data.result && data.result.titulo) {
-          return data.result.titulo;
+          const categoria = CATEGORIAS_VALIDAS.has(data.result.categoria) ? data.result.categoria : "Otro";
+          return { titulo: data.result.titulo, categoria, descripcion: data.result.descripcion || "" };
         }
       } catch {
         // si falla, probamos de nuevo mientras queden intentos
       }
     }
-    return tituloPorDefecto;
+    return { titulo: tituloPorDefecto, categoria: "Otro", descripcion: "" };
   }
 
   function formatearNombreArchivo(nombreArchivo) {
@@ -183,12 +186,14 @@
     return conEspacios.replace(/\b\w/g, (letra) => letra.toUpperCase());
   }
 
-  async function crearMaterialNuevo(nombre, texto, origen) {
+  async function crearMaterialNuevo(nombre, texto, origen, categoria = "Otro", descripcion = "") {
     materialActual = {
       id: generarIdTema(),
       nombre,
       texto,
       origen,
+      categoria,
+      descripcion,
       creadoEn: new Date().toISOString(),
       flashcards: null,
       quiz: null,
@@ -228,9 +233,12 @@
       if (!res.ok) throw new Error(data.error || "No se pudo procesar el archivo.");
 
       loadingTexto.textContent = "Analizando el tema de tu archivo...";
-      const titulo = await generarTituloTema(data.text, formatearNombreArchivo(data.fileName));
+      const { titulo, categoria, descripcion } = await generarMetadatosTema(
+        data.text,
+        formatearNombreArchivo(data.fileName)
+      );
 
-      await crearMaterialNuevo(titulo, data.text, "archivo");
+      await crearMaterialNuevo(titulo, data.text, "archivo", categoria, descripcion);
     } catch (err) {
       fileError.textContent = err.message;
       fileError.classList.remove("oculto");
@@ -248,8 +256,8 @@
     mostrar(loadingCard);
     ocultar(uploadCard);
 
-    const titulo = await generarTituloTema(texto, "Texto pegado");
-    await crearMaterialNuevo(titulo, texto, "texto");
+    const { titulo, categoria, descripcion } = await generarMetadatosTema(texto, "Texto pegado");
+    await crearMaterialNuevo(titulo, texto, "texto", categoria, descripcion);
 
     ocultar(loadingCard);
   });
