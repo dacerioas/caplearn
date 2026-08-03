@@ -26,8 +26,12 @@ const TASK_PROMPTS = {
   },
   quiz: {
     instruction:
-      "Genera un quiz de opción múltiple con 5 a 8 preguntas basadas en el material. Cada pregunta debe tener 4 opciones.",
-    schema: `{"questions": [{"question": string, "options": [string], "correctIndex": number, "explanation": string}]}`,
+      "Genera un quiz de 6 a 9 preguntas basadas en el material, combinando tres tipos: " +
+      '"opcion_multiple" (con 4 opciones y una es correcta), "respuesta_corta" (se responde en una frase, incluye una respuesta modelo breve) y ' +
+      '"desarrollo" (se responde con un párrafo, incluye una respuesta modelo más completa). ' +
+      "Incluye al menos 3 preguntas de opcion_multiple, 1 o 2 de respuesta_corta y 1 o 2 de desarrollo. " +
+      "Para las de opcion_multiple completa options y correctIndex y deja modelAnswer vacío. Para respuesta_corta y desarrollo deja options como lista vacía y correctIndex en -1, y completa modelAnswer.",
+    schema: `{"questions": [{"type": "opcion_multiple"|"respuesta_corta"|"desarrollo", "question": string, "options": [string], "correctIndex": number, "modelAnswer": string, "explanation": string}]}`,
   },
   "key-concepts": {
     instruction: "Extrae los conceptos clave del material con una definición breve para cada uno.",

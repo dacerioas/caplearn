@@ -225,7 +225,7 @@
 }
 
 /* ========================
-   PASO 2: REPASO (compartido con quiz.html)
+   PASO 2: REPASO
 ======================== */
 .review-seccion {
   display: flex;
@@ -234,19 +234,8 @@
   flex: 1;
 }
 
-.review-topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.review-contador {
-  color: #a0aec0;
-  font-size: 15px;
-}
-
 /* ========================
-   Repaso de flashcards (diseño propio, no lo usa quiz.html)
+   Repaso de flashcards
 ======================== */
 .review-volver {
   align-self: flex-start;

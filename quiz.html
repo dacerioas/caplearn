@@ -76,18 +76,66 @@
     <p class="upload-error oculto" id="generandoError"></p>
 
     <!-- PASO 2: tomar el quiz -->
-    <div class="review-seccion oculto" id="tomarSeccion">
-      <div class="review-topbar">
-        <button type="button" class="btn-secundario" id="volverListaBtn">← Tus quizzes</button>
-        <p class="review-nombre-tema" id="quizNombreActual"></p>
-        <p class="review-contador" id="quizContador"></p>
+    <div class="qz-seccion oculto" id="tomarSeccion">
+      <div class="qz-header">
+        <div class="qz-header-info">
+          <h2 class="qz-titulo" id="qzTitulo">Quiz</h2>
+          <p class="qz-subtitulo" id="qzSubtitulo">Pregunta 1 de 1</p>
+        </div>
+        <div class="qz-header-derecha">
+          <span class="qz-timer" id="qzTimer">⏱ 00:00</span>
+          <button type="button" class="qz-cerrar-btn" id="qzCerrarBtn" title="Salir del quiz" aria-label="Salir del quiz">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+          </button>
+        </div>
       </div>
 
-      <div class="quiz-pregunta-card" id="preguntaCard">
-        <p class="quiz-enunciado" id="preguntaTexto"></p>
-        <div class="quiz-opciones" id="opcionesContenedor"></div>
-        <p class="quiz-explicacion oculto" id="explicacionTexto"></p>
-        <button type="button" class="btn-primario oculto" id="siguienteBtn">Siguiente pregunta</button>
+      <div class="qz-progreso">
+        <div class="qz-progreso-etiquetas">
+          <span class="qz-progreso-label">Progreso del Quiz</span>
+          <span class="qz-progreso-pct" id="qzProgresoPct">0% completado</span>
+        </div>
+        <div class="qz-progreso-barra"><div class="qz-progreso-relleno" id="qzProgresoRelleno" style="width:0%"></div></div>
+      </div>
+
+      <div class="qz-pregunta-card">
+        <span class="qz-badge" id="qzBadge">PREGUNTA 1</span>
+        <p class="qz-enunciado" id="qzEnunciado"></p>
+      </div>
+
+      <!-- Opción múltiple -->
+      <div class="qz-opciones oculto" id="qzOpciones"></div>
+
+      <!-- Respuesta corta -->
+      <div class="qz-corta oculto" id="qzCortaWrap">
+        <input type="text" class="qz-input-corta" id="qzInputCorta" maxlength="50" placeholder="Escribe tu respuesta aquí...">
+        <p class="qz-contador" id="qzContadorCorta">0 / 50 caracteres</p>
+      </div>
+
+      <!-- Desarrollo -->
+      <div class="qz-desarrollo oculto" id="qzDesarrolloWrap">
+        <div class="qz-editor" id="qzEditor" contenteditable="true" data-placeholder="Desarrolla tu respuesta aquí..."></div>
+        <div class="qz-editor-footer">
+          <div class="qz-toolbar">
+            <button type="button" class="qz-tool-btn" data-cmd="bold" title="Negrita"><b>B</b></button>
+            <button type="button" class="qz-tool-btn" data-cmd="italic" title="Cursiva"><i>I</i></button>
+            <button type="button" class="qz-tool-btn" data-cmd="insertUnorderedList" title="Lista">☰</button>
+          </div>
+          <p class="qz-contador" id="qzContadorDesarrollo">0 palabras</p>
+        </div>
+      </div>
+
+      <!-- Respuesta modelo revelada (respuesta_corta / desarrollo) -->
+      <div class="qz-revelado oculto" id="qzRevelado">
+        <p class="qz-revelado-titulo">Respuesta modelo</p>
+        <p class="qz-revelado-texto" id="qzRespuestaModelo"></p>
+      </div>
+
+      <div class="qz-acciones">
+        <button type="button" class="qz-siguiente-btn" id="qzSiguienteBtn" disabled>
+          <span id="qzSiguienteTexto">Siguiente</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
       </div>
 
       <div class="quiz-resultado oculto" id="resultadoFinal">
@@ -95,9 +143,10 @@
           <span id="resultadoPuntaje">0%</span>
         </div>
         <p class="quiz-resultado-texto" id="resultadoTexto"></p>
+        <p class="quiz-resultado-texto oculto" id="resultadoDesarrolloTexto"></p>
         <div class="quiz-resultado-acciones">
           <button type="button" class="btn-secundario" id="reintentarBtn">Reintentar</button>
-          <button type="button" class="btn-primario" id="terminarBtn">Volver a mis quizzes</button>
+          <button type="button" class="btn-primario" id="terminarBtn">Volver a mis temas</button>
         </div>
       </div>
     </div>

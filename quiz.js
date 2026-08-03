@@ -1,6 +1,7 @@
 (() => {
   const ICONO_QUIZ = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>`;
   const ICONO_LAPIZ = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>`;
+  const LETRAS = ["A", "B", "C", "D", "E", "F"];
 
   const origenSeccion = document.getElementById("origenSeccion");
   const origenVacio = document.getElementById("origenVacio");
@@ -10,26 +11,50 @@
   const generandoError = document.getElementById("generandoError");
 
   const tomarSeccion = document.getElementById("tomarSeccion");
-  const volverListaBtn = document.getElementById("volverListaBtn");
-  const quizNombreActual = document.getElementById("quizNombreActual");
-  const quizContador = document.getElementById("quizContador");
+  const qzTitulo = document.getElementById("qzTitulo");
+  const qzSubtitulo = document.getElementById("qzSubtitulo");
+  const qzTimer = document.getElementById("qzTimer");
+  const qzCerrarBtn = document.getElementById("qzCerrarBtn");
 
-  const preguntaCard = document.getElementById("preguntaCard");
-  const preguntaTexto = document.getElementById("preguntaTexto");
-  const opcionesContenedor = document.getElementById("opcionesContenedor");
-  const explicacionTexto = document.getElementById("explicacionTexto");
-  const siguienteBtn = document.getElementById("siguienteBtn");
+  const qzProgresoPct = document.getElementById("qzProgresoPct");
+  const qzProgresoRelleno = document.getElementById("qzProgresoRelleno");
+
+  const qzBadge = document.getElementById("qzBadge");
+  const qzEnunciado = document.getElementById("qzEnunciado");
+
+  const qzOpciones = document.getElementById("qzOpciones");
+
+  const qzCortaWrap = document.getElementById("qzCortaWrap");
+  const qzInputCorta = document.getElementById("qzInputCorta");
+  const qzContadorCorta = document.getElementById("qzContadorCorta");
+
+  const qzDesarrolloWrap = document.getElementById("qzDesarrolloWrap");
+  const qzEditor = document.getElementById("qzEditor");
+  const qzContadorDesarrollo = document.getElementById("qzContadorDesarrollo");
+
+  const qzRevelado = document.getElementById("qzRevelado");
+  const qzRespuestaModelo = document.getElementById("qzRespuestaModelo");
+
+  const qzSiguienteBtn = document.getElementById("qzSiguienteBtn");
+  const qzSiguienteTexto = document.getElementById("qzSiguienteTexto");
 
   const resultadoFinal = document.getElementById("resultadoFinal");
   const resultadoPuntaje = document.getElementById("resultadoPuntaje");
   const resultadoTexto = document.getElementById("resultadoTexto");
+  const resultadoDesarrolloTexto = document.getElementById("resultadoDesarrolloTexto");
   const reintentarBtn = document.getElementById("reintentarBtn");
   const terminarBtn = document.getElementById("terminarBtn");
 
   let materialesCache = [];
   let materialActual = null;
   let indiceActual = 0;
-  let correctas = 0;
+  let correctasMC = 0;
+  let totalMC = 0;
+  let revisadasAbiertas = 0;
+  let respuestaSeleccionada = null;
+  let fase = "responder"; // "responder" | "revelado" (solo aplica a respuesta_corta / desarrollo)
+  let segundos = 0;
+  let timerId = null;
 
   function escaparHtml(texto) {
     const div = document.createElement("div");
@@ -43,6 +68,10 @@
 
   function ocultar(el) {
     el.classList.add("oculto");
+  }
+
+  function tipoDe(pregunta) {
+    return pregunta.type || "opcion_multiple";
   }
 
   // ---------- Lista de temas ----------
@@ -105,13 +134,25 @@
     await guardarMateriales(todos);
   }
 
-  volverListaBtn.addEventListener("click", volverALista);
+  function detenerTimer() {
+    if (timerId) {
+      clearInterval(timerId);
+      timerId = null;
+    }
+  }
 
   function volverALista() {
+    detenerTimer();
     tomarSeccion.classList.add("oculto");
     origenSeccion.classList.remove("oculto");
     cargarMateriales();
   }
+
+  qzCerrarBtn.addEventListener("click", () => {
+    if (confirm("¿Seguro que querés salir? Vas a perder el progreso de este intento.")) {
+      volverALista();
+    }
+  });
 
   // ---------- Generar quiz al vuelo si el tema no lo tiene ----------
   async function seleccionarMaterial(material) {
@@ -157,80 +198,191 @@
   function iniciarQuiz(material) {
     materialActual = material;
     indiceActual = 0;
-    correctas = 0;
+    correctasMC = 0;
+    totalMC = material.quiz.filter((p) => tipoDe(p) === "opcion_multiple").length;
+    revisadasAbiertas = 0;
+    segundos = 0;
 
-    quizNombreActual.textContent = material.nombre;
+    qzTitulo.textContent = `Quiz: ${material.nombre}`;
     origenSeccion.classList.add("oculto");
     tomarSeccion.classList.remove("oculto");
-    preguntaCard.classList.remove("oculto");
     resultadoFinal.classList.add("oculto");
+
+    detenerTimer();
+    actualizarTimer();
+    timerId = setInterval(() => {
+      segundos++;
+      actualizarTimer();
+    }, 1000);
 
     mostrarPregunta();
   }
 
-  function mostrarPregunta() {
-    const pregunta = materialActual.quiz[indiceActual];
-    quizContador.textContent = `${indiceActual + 1} / ${materialActual.quiz.length}`;
-    preguntaTexto.textContent = pregunta.question;
-    explicacionTexto.classList.add("oculto");
-    siguienteBtn.classList.add("oculto");
+  function actualizarTimer() {
+    const mm = String(Math.floor(segundos / 60)).padStart(2, "0");
+    const ss = String(segundos % 60).padStart(2, "0");
+    qzTimer.textContent = `⏱ ${mm}:${ss}`;
+  }
 
-    opcionesContenedor.innerHTML = (pregunta.options || [])
-      .map((op, j) => `<button type="button" class="quiz-opcion" data-opcion="${j}">${escaparHtml(op)}</button>`)
+  function mostrarPregunta() {
+    const total = materialActual.quiz.length;
+    const pregunta = materialActual.quiz[indiceActual];
+    const numero = indiceActual + 1;
+    const tipo = tipoDe(pregunta);
+
+    respuestaSeleccionada = null;
+    fase = "responder";
+
+    qzSubtitulo.textContent = `Pregunta ${numero} de ${total}`;
+    qzBadge.textContent = `PREGUNTA ${numero}`;
+    qzEnunciado.textContent = pregunta.question;
+
+    const pct = Math.round((numero / total) * 100);
+    qzProgresoPct.textContent = `${pct}% completado`;
+    qzProgresoRelleno.style.width = `${pct}%`;
+
+    ocultar(qzOpciones);
+    ocultar(qzCortaWrap);
+    ocultar(qzDesarrolloWrap);
+    ocultar(qzRevelado);
+
+    qzSiguienteBtn.disabled = true;
+    qzSiguienteTexto.textContent = "Siguiente";
+
+    if (tipo === "respuesta_corta") {
+      qzInputCorta.value = "";
+      qzInputCorta.disabled = false;
+      qzContadorCorta.textContent = "0 / 50 caracteres";
+      mostrar(qzCortaWrap);
+      qzSiguienteTexto.textContent = "Siguiente";
+    } else if (tipo === "desarrollo") {
+      qzEditor.innerHTML = "";
+      qzEditor.contentEditable = "true";
+      qzContadorDesarrollo.textContent = "0 palabras";
+      mostrar(qzDesarrolloWrap);
+      qzSiguienteTexto.textContent = "Enviar respuesta";
+    } else {
+      renderizarOpciones(pregunta);
+      mostrar(qzOpciones);
+    }
+  }
+
+  function renderizarOpciones(pregunta) {
+    qzOpciones.innerHTML = (pregunta.options || [])
+      .map(
+        (op, j) => `
+        <button type="button" class="qz-opcion" data-opcion="${j}">
+          <span class="qz-opcion-letra">${LETRAS[j] || j + 1}</span>
+          <span class="qz-opcion-texto">${escaparHtml(op)}</span>
+          <span class="qz-opcion-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </button>`
+      )
       .join("");
 
-    opcionesContenedor.querySelectorAll(".quiz-opcion").forEach((btn) => {
+    qzOpciones.querySelectorAll(".qz-opcion").forEach((btn) => {
       btn.addEventListener("click", () => {
-        const elegida = Number(btn.dataset.opcion);
-        const correcta = pregunta.correctIndex;
-
-        opcionesContenedor.querySelectorAll(".quiz-opcion").forEach((b) => {
-          b.disabled = true;
-          const suOpcion = Number(b.dataset.opcion);
-          if (suOpcion === correcta) b.classList.add("correcta");
-          else if (suOpcion === elegida) b.classList.add("incorrecta");
+        respuestaSeleccionada = Number(btn.dataset.opcion);
+        qzOpciones.querySelectorAll(".qz-opcion").forEach((b) => {
+          b.classList.toggle("seleccionada", Number(b.dataset.opcion) === respuestaSeleccionada);
         });
-
-        if (elegida === correcta) correctas++;
-
-        if (pregunta.explanation) {
-          explicacionTexto.textContent = pregunta.explanation;
-          explicacionTexto.classList.remove("oculto");
-        }
-
-        siguienteBtn.textContent =
-          indiceActual < materialActual.quiz.length - 1 ? "Siguiente pregunta" : "Ver resultado";
-        siguienteBtn.classList.remove("oculto");
+        qzSiguienteBtn.disabled = false;
       });
     });
   }
 
-  siguienteBtn.addEventListener("click", () => {
+  qzInputCorta.addEventListener("input", () => {
+    const len = qzInputCorta.value.length;
+    qzContadorCorta.textContent = `${len} / 50 caracteres`;
+    qzSiguienteBtn.disabled = qzInputCorta.value.trim().length === 0;
+  });
+
+  function contarPalabras(texto) {
+    return texto.trim() ? texto.trim().split(/\s+/).length : 0;
+  }
+
+  qzEditor.addEventListener("input", () => {
+    const texto = qzEditor.textContent || "";
+    qzContadorDesarrollo.textContent = `${contarPalabras(texto)} palabras`;
+    qzSiguienteBtn.disabled = texto.trim().length === 0;
+  });
+
+  document.querySelectorAll(".qz-tool-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      qzEditor.focus();
+      document.execCommand(btn.dataset.cmd, false, null);
+    });
+  });
+
+  qzSiguienteBtn.addEventListener("click", () => {
+    const pregunta = materialActual.quiz[indiceActual];
+    const tipo = tipoDe(pregunta);
+
+    if (tipo === "opcion_multiple") {
+      if (respuestaSeleccionada === pregunta.correctIndex) correctasMC++;
+      avanzar();
+      return;
+    }
+
+    // respuesta_corta / desarrollo: primero revelamos la respuesta modelo, luego avanzamos
+    if (fase === "responder") {
+      revisadasAbiertas++;
+      qzRespuestaModelo.textContent = pregunta.modelAnswer || "No hay respuesta modelo para esta pregunta.";
+      mostrar(qzRevelado);
+      if (tipo === "respuesta_corta") qzInputCorta.disabled = true;
+      else qzEditor.contentEditable = "false";
+      qzSiguienteTexto.textContent = "Siguiente pregunta";
+      fase = "revelado";
+      return;
+    }
+
+    avanzar();
+  });
+
+  function avanzar() {
     indiceActual++;
     if (indiceActual >= materialActual.quiz.length) {
       mostrarResultadoFinal();
     } else {
       mostrarPregunta();
     }
-  });
-
-  async function mostrarResultadoFinal() {
-    preguntaCard.classList.add("oculto");
-    resultadoFinal.classList.remove("oculto");
-
-    const total = materialActual.quiz.length;
-    const porcentaje = total ? Math.round((correctas / total) * 100) : 0;
-    resultadoPuntaje.textContent = `${porcentaje}%`;
-    resultadoTexto.textContent = `Obtuviste ${correctas} de ${total} correctas.`;
-
-    materialActual.intentos = (materialActual.intentos || 0) + 1;
-    materialActual.mejorPuntaje =
-      materialActual.mejorPuntaje == null ? porcentaje : Math.max(materialActual.mejorPuntaje, porcentaje);
-    await persistirMaterial(materialActual);
   }
 
-  reintentarBtn.addEventListener("click", () => iniciarQuiz(materialActual));
-  terminarBtn.addEventListener("click", volverALista);
+  async function mostrarResultadoFinal() {
+    detenerTimer();
+    tomarSeccion.querySelectorAll(":scope > *:not(#resultadoFinal)").forEach((el) => el.classList.add("oculto"));
+    resultadoFinal.classList.remove("oculto");
+
+    if (totalMC > 0) {
+      const porcentaje = Math.round((correctasMC / totalMC) * 100);
+      resultadoPuntaje.textContent = `${porcentaje}%`;
+      resultadoTexto.textContent = `Obtuviste ${correctasMC} de ${totalMC} correctas en opción múltiple.`;
+
+      materialActual.intentos = (materialActual.intentos || 0) + 1;
+      materialActual.mejorPuntaje =
+        materialActual.mejorPuntaje == null ? porcentaje : Math.max(materialActual.mejorPuntaje, porcentaje);
+      await persistirMaterial(materialActual);
+    } else {
+      resultadoPuntaje.textContent = "✓";
+      resultadoTexto.textContent = "Este quiz no tenía preguntas de opción múltiple para calificar.";
+    }
+
+    if (revisadasAbiertas > 0) {
+      resultadoDesarrolloTexto.textContent = `Además revisaste ${revisadasAbiertas} pregunta${revisadasAbiertas === 1 ? "" : "s"} de desarrollo/respuesta corta comparando con la respuesta modelo.`;
+      resultadoDesarrolloTexto.classList.remove("oculto");
+    } else {
+      resultadoDesarrolloTexto.classList.add("oculto");
+    }
+  }
+
+  reintentarBtn.addEventListener("click", () => {
+    tomarSeccion.querySelectorAll(":scope > *").forEach((el) => el.classList.remove("oculto"));
+    resultadoFinal.classList.add("oculto");
+    iniciarQuiz(materialActual);
+  });
+  terminarBtn.addEventListener("click", () => {
+    tomarSeccion.querySelectorAll(":scope > *").forEach((el) => el.classList.remove("oculto"));
+    volverALista();
+  });
 
   // ---------- Arranque ----------
   cargarMateriales();
