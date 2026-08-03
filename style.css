@@ -282,3 +282,45 @@ body::before {
   color: var(--color-primario);
   text-decoration: none;
 }
+
+/* ========================
+   RESPONSIVE (celular / tablet)
+======================== */
+@media (max-width: 900px) {
+  body {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .contenedor {
+    flex-direction: column;
+  }
+
+  .lado-izquierdo {
+    width: 100%;
+    padding: 50px 24px 30px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .logo {
+    margin-top: 0;
+  }
+
+  .lado-izquierdo h1 {
+    font-size: 34px;
+  }
+
+  .features {
+    display: none;
+  }
+
+  .lado-derecho {
+    width: 100%;
+    padding: 24px;
+  }
+
+  .form-box {
+    padding: 28px 22px;
+  }
+}

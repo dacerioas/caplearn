@@ -513,3 +513,64 @@
   background-color: #1A62F4;
   box-shadow: 0 0 0 3px rgba(26, 98, 244, 0.3);
 }
+
+/* ========================
+   RESPONSIVE (celular / tablet)
+======================== */
+@media (max-width: 860px) {
+  .temas-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .temas-header .btn-primario {
+    width: 100%;
+  }
+
+  .review-header {
+    align-items: center;
+  }
+
+  .review-header-titulo {
+    font-size: 19px;
+  }
+
+  .review-card,
+  .qz-pregunta-card {
+    padding: 24px 20px;
+  }
+
+  .review-texto {
+    font-size: 21px;
+  }
+
+  .review-acciones {
+    justify-content: stretch;
+  }
+
+  .review-pill {
+    flex: 1 1 calc(50% - 7px);
+    justify-content: center;
+  }
+
+  .manual-nombre-fila {
+    flex-direction: column;
+  }
+
+  .manual-form {
+    flex-direction: column;
+  }
+
+  .manual-form input {
+    min-width: 0;
+  }
+
+  .manual-acciones {
+    flex-direction: column-reverse;
+  }
+
+  .manual-acciones button {
+    width: 100%;
+  }
+}

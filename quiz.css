@@ -401,3 +401,47 @@
   gap: 12px;
   margin-top: 10px;
 }
+
+/* ========================
+   RESPONSIVE (celular / tablet)
+======================== */
+@media (max-width: 860px) {
+  .qz-header {
+    align-items: center;
+  }
+
+  .qz-titulo {
+    font-size: 18px;
+  }
+
+  .qz-enunciado {
+    font-size: 19px;
+  }
+
+  .qz-opcion {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .qz-acciones {
+    justify-content: stretch;
+  }
+
+  .qz-siguiente-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .quiz-resultado {
+    padding: 36px 22px;
+  }
+
+  .quiz-resultado-acciones {
+    flex-direction: column-reverse;
+    width: 100%;
+  }
+
+  .quiz-resultado-acciones button {
+    width: 100%;
+  }
+}

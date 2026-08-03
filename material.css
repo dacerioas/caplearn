@@ -353,3 +353,32 @@
   font-size: 14px;
   color: #a0aec0;
 }
+
+/* ========================
+   RESPONSIVE (celular / tablet)
+======================== */
+@media (max-width: 860px) {
+  .temas-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .temas-header .btn-primario {
+    width: 100%;
+  }
+
+  .material-resumen-archivo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .material-resumen-archivo .btn-secundario {
+    width: 100%;
+  }
+
+  .resultado-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}

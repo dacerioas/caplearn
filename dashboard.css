@@ -590,3 +590,122 @@ body {
 .btn-flashbot:hover {
   background-color: #1A62F4;
 }
+
+/* ========================
+   RESPONSIVE (celular / tablet)
+======================== */
+@media (max-width: 860px) {
+  body {
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  /* La sidebar pasa a ser una barra superior compacta (logo + perfil);
+     la navegación se separa en una barra inferior fija tipo app. */
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    flex-shrink: 0;
+  }
+
+  .sidebar-logo {
+    width: 40px;
+    margin-bottom: 0;
+  }
+
+  .nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 0;
+    background-color: #0d1530;
+    border-top: 1px solid #1a2035;
+    padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 0px));
+    z-index: 100;
+  }
+
+  .nav-item {
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    padding: 6px 2px;
+    font-size: 10px;
+    text-align: center;
+  }
+
+  .nav-icono {
+    width: 20px;
+    height: 20px;
+  }
+
+  .perfil {
+    border-top: none;
+    padding-top: 0;
+    gap: 8px;
+  }
+
+  .perfil-info {
+    display: none;
+  }
+
+  .contenido {
+    padding: 20px 16px calc(90px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .saludo h1 {
+    font-size: 26px;
+  }
+
+  .header-derecha {
+    width: 100%;
+  }
+
+  .buscador {
+    width: 100%;
+  }
+
+  .progreso-contenido {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .stats-grid {
+    width: 100%;
+  }
+
+  .flashcards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .flashbot-seccion {
+    flex-wrap: wrap;
+  }
+
+  .btn-flashbot {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .flashcards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
