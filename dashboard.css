@@ -750,14 +750,40 @@ body {
     width: 100%;
   }
 
+  .progreso-tarjeta {
+    padding: 18px;
+  }
+
   .progreso-contenido {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .progreso-anillo {
+    --anillo-diametro: 88px;
+    flex-shrink: 0;
   }
 
   .stats-grid {
-    width: 100%;
+    width: auto;
+    flex: 1;
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .stat-tile {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 6px;
+    padding: 7px 10px;
+  }
+
+  .stat-tile .stat-num {
+    font-size: 15px;
+  }
+
+  .stat-tile .stat-label {
+    font-size: 11px;
   }
 
   .flashcards-grid {
@@ -775,10 +801,6 @@ body {
 
 @media (max-width: 420px) {
   .flashcards-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .stats-grid {
     grid-template-columns: 1fr;
   }
 }
