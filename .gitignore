@@ -14,8 +14,8 @@ server/uploads/*
 # Modelo de OCR (pesado y no usado actualmente)
 server/eng.traineddata
 
-# Configuración local de Claude Code (específica de esta máquina)
-.claude/settings.local.json
+# Configuración local del editor/herramientas (específica de esta máquina)
+.claude/
 
 # Sistema operativo / editor
 .DS_Store
