@@ -304,6 +304,7 @@ body {
 
 .tema-info {
   flex: 1;
+  min-width: 0;
 }
 
 .tema-info h4 {
