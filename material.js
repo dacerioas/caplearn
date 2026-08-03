@@ -21,6 +21,8 @@
   const conteoTexto = document.getElementById("conteoTexto");
   const nuevoMaterialBtn = document.getElementById("nuevoMaterialBtn");
 
+  const sinTextoAviso = document.getElementById("sinTextoAviso");
+  const generarSeccionCard = document.getElementById("generarSeccionCard");
   const aiLoadingCard = document.getElementById("aiLoadingCard");
   const aiErrorCard = document.getElementById("aiErrorCard");
   const aiErrorText = document.getElementById("aiErrorText");
@@ -114,7 +116,7 @@
 
   function abrirMaterialExistente(material) {
     materialActual = material;
-    mostrarResultadoMaterial(material.nombre, material.texto ? material.texto.length : 0);
+    mostrarResultadoMaterial(material.nombre, material.texto ? material.texto.length : 0, Boolean(material.texto));
   }
 
   // ---------- Tabs (archivo / texto) ----------
@@ -272,14 +274,18 @@
     await persistirMaterialActual();
   }
 
-  function mostrarResultadoMaterial(nombre, chars) {
+  function mostrarResultadoMaterial(nombre, chars, tieneTexto = true) {
     nombreArchivo.textContent = nombre;
-    conteoTexto.textContent = `${chars.toLocaleString("es")} caracteres listos para analizar`;
+    conteoTexto.textContent = tieneTexto
+      ? `${chars.toLocaleString("es")} caracteres listos para analizar`
+      : "Sin texto de origen guardado";
     ocultar(bibliotecaSeccion);
     ocultar(uploadCard);
     mostrar(resultadoSeccion);
     ocultar(aiResultCard);
     ocultar(aiErrorCard);
+    sinTextoAviso.classList.toggle("oculto", tieneTexto);
+    generarSeccionCard.classList.toggle("oculto", !tieneTexto);
   }
 
   nuevoMaterialBtn.addEventListener("click", () => {
@@ -409,6 +415,16 @@
   function renderQuiz(data) {
     return (data.questions || [])
       .map((q, i) => {
+        const tipo = q.type || "opcion_multiple";
+
+        if (tipo !== "opcion_multiple") {
+          return `
+          <details class="pregunta-practica">
+            <summary>${i + 1}. ${escaparHtml(q.question)}</summary>
+            <p>${escaparHtml(q.modelAnswer || "No hay respuesta modelo para esta pregunta.")}</p>
+          </details>`;
+        }
+
         const opciones = (q.options || [])
           .map(
             (op, j) =>

@@ -102,19 +102,28 @@ function contarCompletadas(tema, srs) {
   // ---------- Tus temas ----------
   const temasDashboardGrid = document.getElementById("temasDashboardGrid");
   const temasDashboardVacio = document.getElementById("temasDashboardVacio");
+  const imagenesCache = {};
 
-  if (!materiales.length) {
-    temasDashboardGrid.innerHTML = "";
-    temasDashboardVacio.classList.remove("oculto");
-  } else {
+  function renderizarTemasGrid(lista, mensajeVacio) {
+    if (!lista.length) {
+      temasDashboardGrid.innerHTML = "";
+      temasDashboardVacio.textContent = mensajeVacio;
+      temasDashboardVacio.classList.remove("oculto");
+      return;
+    }
+
     temasDashboardVacio.classList.add("oculto");
-    temasDashboardGrid.innerHTML = progresoPorTema
-      .map(({ tema, completadas }, i) => {
+    temasDashboardGrid.innerHTML = lista
+      .map(({ tema, completadas }) => {
         const totalFlashcards = (tema.flashcards || []).length;
         const porcentaje = totalFlashcards ? Math.round((completadas / totalFlashcards) * 100) : 0;
+        const imagenCacheada = imagenesCache[tema.id];
+        const imgHtml = imagenCacheada
+          ? `<img src="${imagenCacheada}" alt="${escaparHtml(tema.nombre)}" style="width:100%; height:100%; object-fit:cover; border-radius:10px;">`
+          : ICONO_TEMA_RESPALDO;
         return `
         <div class="tema-dashboard-card">
-          <div class="tema-img tema-img-emoji" id="temaImg-${i}">${ICONO_TEMA_RESPALDO}</div>
+          <div class="tema-img ${imagenCacheada ? "" : "tema-img-emoji"}" id="temaImg-${tema.id}">${imgHtml}</div>
           <div class="tema-info">
             <h4>${escaparHtml(tema.nombre)}</h4>
             <div class="barra-progreso">
@@ -127,17 +136,25 @@ function contarCompletadas(tema, srs) {
       })
       .join("");
 
-    // Busca la imagen de cada tema en paralelo, sin bloquear el resto de la pantalla.
-    progresoPorTema.forEach(({ tema }, i) => {
+    // Busca la imagen de cada tema que todavía no la tenga en caché, sin bloquear el resto de la pantalla.
+    lista.forEach(({ tema }) => {
+      if (imagenesCache[tema.id]) return;
       obtenerImagenDeTema(tema.nombre).then((urlImagen) => {
         if (!urlImagen) return;
-        const contenedor = document.getElementById(`temaImg-${i}`);
+        imagenesCache[tema.id] = urlImagen;
+        const contenedor = document.getElementById(`temaImg-${tema.id}`);
         if (contenedor) {
+          contenedor.classList.remove("tema-img-emoji");
           contenedor.innerHTML = `<img src="${urlImagen}" alt="${escaparHtml(tema.nombre)}" style="width:100%; height:100%; object-fit:cover; border-radius:10px;">`;
         }
       });
     });
   }
+
+  renderizarTemasGrid(
+    progresoPorTema,
+    materiales.length ? "Ningún tema coincide con tu búsqueda." : "Todavía no tienes temas. Sube material para empezar."
+  );
 
   // ---------- Flashcards recientes ----------
   const flashcardsGrid = document.getElementById("flashcardsGrid");
@@ -154,5 +171,27 @@ function contarCompletadas(tema, srs) {
   } else {
     flashcardsGrid.innerHTML = "";
     flashcardsVacio.classList.remove("oculto");
+  }
+
+  // ---------- Búsqueda ----------
+  function normalizar(texto) {
+    return texto
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "");
+  }
+
+  const buscadorInput = document.getElementById("buscadorInput");
+  if (buscadorInput) {
+    buscadorInput.addEventListener("input", () => {
+      const termino = normalizar(buscadorInput.value.trim());
+      const filtrados = termino
+        ? progresoPorTema.filter(({ tema }) => normalizar(tema.nombre).includes(termino))
+        : progresoPorTema;
+      renderizarTemasGrid(
+        filtrados,
+        materiales.length ? "Ningún tema coincide con tu búsqueda." : "Todavía no tienes temas. Sube material para empezar."
+      );
+    });
   }
 })();

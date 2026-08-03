@@ -238,21 +238,6 @@ body::before {
   color: #4a5568;
 }
 
-/* Recordarme y olvidaste contraseña */
-.opciones {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  font-size: 14px;
-  color: #a0aec0;
-}
-
-.opciones a {
-  color: var(--color-primario);
-  text-decoration: none;
-}
-
 /* Botón principal de login */
 .btn-login {
   width: 100%;
@@ -271,52 +256,6 @@ body::before {
 
 .btn-login:hover {
   background-color: var(--color-primario);
-}
-
-/* Separador "o continúa con" */
-.separador {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #4a5568;
-  margin-bottom: 20px;
-  font-size: 14px;
-}
-
-.separador::before,
-.separador::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background-color: #2d3748;
-}
-
-/* Botones de Google y Apple */
-.botones-sociales {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.btn-social {
-  flex: 1;
-  padding: 12px;
-  background-color: #1a2035;
-  color: var(--color-secundario);
-  border: none;
-  border-radius: 10px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: background-color 0.2s;
-}
-
-.btn-social:hover {
-  background-color: #2d3748;
 }
 
 /* Enlace de registro */
