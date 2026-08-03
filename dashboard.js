@@ -32,12 +32,16 @@ function escaparHtml(texto) {
 
 const ETIQUETA_DIFICULTAD = { facil: "Fácil", medio: "Medio", dificil: "Difícil" };
 
-const CATEGORIAS_VALIDAS = new Set(["Ciencias", "Historia", "Geografía", "Matemáticas", "Literatura", "Otro"]);
+const CATEGORIAS_VALIDAS = new Set(["Ciencias", "Historia", "Geografía", "Matemáticas", "Literatura", "Tecnología", "Otro"]);
 
 const CATEGORIA_INFO = {
   Ciencias: {
     color: "#9f7aea",
     icono: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v5.5L4.5 18a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 8.5V3"/></svg>`,
+  },
+  Tecnología: {
+    color: "#ed64a6",
+    icono: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v2"/><path d="M15 2v2"/><path d="M9 20v2"/><path d="M15 20v2"/><path d="M2 9h2"/><path d="M2 15h2"/><path d="M20 9h2"/><path d="M20 15h2"/></svg>`,
   },
   Historia: {
     color: "#ed8936",
@@ -69,7 +73,7 @@ function renderFlashcardReciente(tarjeta, material) {
   return `
     <div class="flashcard">
       <p class="fc-pregunta">${escaparHtml(tarjeta.question)}</p>
-      <div class="fc-icono" style="color:${info.color}">${info.icono}</div>
+      <div class="fc-icono" id="fcIcono-${material ? material.id : ""}" style="color:${info.color}">${info.icono}</div>
       <p class="fc-respuesta">${escaparHtml(tarjeta.answer)}</p>
       <div class="fc-footer">
         <span class="fc-materia">${escaparHtml(tarjeta.subject || "")}</span>
@@ -230,6 +234,56 @@ function contarCompletadas(tema, srs) {
     flashcardsGrid.innerHTML = "";
     flashcardsVacio.classList.remove("oculto");
   }
+
+  // Materiales viejos (de antes de que existiera el campo categoria) se clasifican
+  // en segundo plano usando sus flashcards como fuente, ya que no tienen texto original.
+  // Las llamadas a la IA van en paralelo, pero el guardado es uno solo al final para
+  // no pisar cambios entre materiales (cada guardarMateriales reemplaza la lista completa).
+  (async () => {
+    const porClasificar = recientes.filter(({ material }) => !CATEGORIAS_VALIDAS.has(material.categoria));
+    if (!porClasificar.length) return;
+
+    const resultados = await Promise.all(
+      porClasificar.map(async ({ material }) => {
+        const fuente = material.texto || (material.flashcards || []).map((t) => `${t.question} ${t.answer}`).join(" ");
+        if (!fuente || !fuente.trim()) return null;
+
+        try {
+          const res = await fetch("/api/material/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: fuente.slice(0, 4000), type: "categorize" }),
+          });
+          const data = await res.json();
+          if (res.ok && data.result && CATEGORIAS_VALIDAS.has(data.result.categoria)) {
+            return { id: material.id, categoria: data.result.categoria };
+          }
+        } catch {
+          // si falla, se queda con "Otro" por ahora y se reintenta en la próxima visita
+        }
+        return null;
+      })
+    );
+
+    const cambios = resultados.filter(Boolean);
+    if (!cambios.length) return;
+
+    const todos = await obtenerMateriales();
+    cambios.forEach(({ id, categoria }) => {
+      const m = todos.find((x) => x.id === id);
+      if (m) m.categoria = categoria;
+    });
+    await guardarMateriales(todos);
+
+    cambios.forEach(({ id, categoria }) => {
+      const info = CATEGORIA_INFO[categoria];
+      const icono = document.getElementById(`fcIcono-${id}`);
+      if (icono) {
+        icono.style.color = info.color;
+        icono.innerHTML = info.icono;
+      }
+    });
+  })();
 
   // ---------- Búsqueda ----------
   function normalizar(texto) {

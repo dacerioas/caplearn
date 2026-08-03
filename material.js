@@ -158,7 +158,7 @@
 
   const EXTENSIONES_VALIDAS = [".pdf", ".doc", ".docx", ".ppt", ".pptx", ".txt", ".md"];
 
-  const CATEGORIAS_VALIDAS = new Set(["Ciencias", "Historia", "Geografía", "Matemáticas", "Literatura", "Otro"]);
+  const CATEGORIAS_VALIDAS = new Set(["Ciencias", "Historia", "Geografía", "Matemáticas", "Literatura", "Tecnología", "Otro"]);
 
   async function generarMetadatosTema(texto, tituloPorDefecto, intentos = 2) {
     for (let intento = 1; intento <= intentos; intento++) {

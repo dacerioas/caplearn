@@ -46,9 +46,14 @@ const TASK_PROMPTS = {
     instruction:
       "Genera metadatos para este material de estudio: " +
       "1) un título corto y descriptivo (máximo 6 palabras, sin comillas ni punto final); " +
-      "2) una categoría, eligiendo EXACTAMENTE una de estas opciones: Ciencias, Historia, Geografía, Matemáticas, Literatura, Otro; " +
+      "2) una categoría, eligiendo EXACTAMENTE una de estas opciones: Ciencias, Historia, Geografía, Matemáticas, Literatura, Tecnología, Otro; " +
       "3) una descripción de una sola frase (máximo 110 caracteres) que resuma de qué trata el material.",
-    schema: `{"titulo": string, "categoria": "Ciencias"|"Historia"|"Geografía"|"Matemáticas"|"Literatura"|"Otro", "descripcion": string}`,
+    schema: `{"titulo": string, "categoria": "Ciencias"|"Historia"|"Geografía"|"Matemáticas"|"Literatura"|"Tecnología"|"Otro", "descripcion": string}`,
+  },
+  categorize: {
+    instruction:
+      "Clasifica este material de estudio en EXACTAMENTE una de estas categorías: Ciencias, Historia, Geografía, Matemáticas, Literatura, Tecnología, Otro.",
+    schema: `{"categoria": "Ciencias"|"Historia"|"Geografía"|"Matemáticas"|"Literatura"|"Tecnología"|"Otro"}`,
   },
 };
 
