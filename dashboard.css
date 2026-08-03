@@ -209,6 +209,18 @@ body {
   color: #4a5568;
 }
 
+.buscar-icono {
+  display: flex;
+  align-items: center;
+  color: #a0aec0;
+  flex-shrink: 0;
+}
+
+.buscar-icono svg {
+  width: 18px;
+  height: 18px;
+}
+
 /* Tarjetas */
 .tarjeta {
   background-color: #0d1530;
