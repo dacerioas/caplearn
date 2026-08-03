@@ -51,6 +51,8 @@
   const temasLista = document.getElementById("temasLista");
   const categoriaFiltros = document.getElementById("categoriaFiltros");
   const temasBuscador = document.getElementById("temasBuscador");
+  const origenBuscadorWrap = document.getElementById("origenBuscadorWrap");
+  const estadoVacioTotal = document.getElementById("estadoVacioTotal");
 
   const generandoCard = document.getElementById("generandoCard");
   const generandoError = document.getElementById("generandoError");
@@ -205,11 +207,15 @@
 
   function renderizarMateriales() {
     if (!materialesCache.length) {
-      temasLista.innerHTML = "";
-      origenVacio.textContent = "Todavía no tienes ningún tema. Sube material o crea uno manualmente.";
-      origenVacio.classList.remove("oculto");
+      origenSeccion.classList.add("oculto");
+      if (origenBuscadorWrap) origenBuscadorWrap.classList.add("oculto");
+      estadoVacioTotal.classList.remove("oculto");
       return;
     }
+
+    origenSeccion.classList.remove("oculto");
+    if (origenBuscadorWrap) origenBuscadorWrap.classList.remove("oculto");
+    estadoVacioTotal.classList.add("oculto");
 
     const filtrados = materialesFiltrados();
 

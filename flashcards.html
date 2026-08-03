@@ -69,11 +69,18 @@
       </div>
     </div>
 
+    <!-- Estado vacío: todavía no se subió ningún material -->
+    <div class="estado-vacio-total oculto" id="estadoVacioTotal">
+      <img src="mascota-capybara.png" alt="" class="estado-vacio-mascota">
+      <p class="estado-vacio-texto">Sube tu material para empezar a aprender</p>
+      <a href="material.html" class="btn-primario">+ Subir Material</a>
+    </div>
+
     <!-- PASO 1: elegir tema -->
     <div class="origen-seccion" id="origenSeccion">
       <div class="categoria-filtros" id="categoriaFiltros"></div>
       <div class="temas-cards-grid" id="temasLista"></div>
-      <p class="origen-vacio oculto" id="origenVacio">Todavía no tienes ningún tema. <a href="material.html">Sube material</a> o crea uno manualmente.</p>
+      <p class="origen-vacio oculto" id="origenVacio">Ningún tema coincide con tu búsqueda.</p>
       <div class="temas-footer-acciones">
         <button type="button" class="btn-primario" id="crearManualBtn">+ Crear tema manual</button>
       </div>

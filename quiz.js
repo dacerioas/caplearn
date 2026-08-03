@@ -41,6 +41,8 @@
   const quizzesLista = document.getElementById("quizzesLista");
   const categoriaFiltros = document.getElementById("categoriaFiltros");
   const temasBuscador = document.getElementById("temasBuscador");
+  const origenBuscadorWrap = temasBuscador ? temasBuscador.closest(".header-derecha") : null;
+  const estadoVacioTotal = document.getElementById("estadoVacioTotal");
 
   const generandoCard = document.getElementById("generandoCard");
   const generandoError = document.getElementById("generandoError");
@@ -186,11 +188,15 @@
 
   function renderizarLista() {
     if (!materialesCache.length) {
-      quizzesLista.innerHTML = "";
-      origenVacio.textContent = "Todavía no tienes material subido. Sube uno en Mi Material.";
-      origenVacio.classList.remove("oculto");
+      origenSeccion.classList.add("oculto");
+      if (origenBuscadorWrap) origenBuscadorWrap.classList.add("oculto");
+      estadoVacioTotal.classList.remove("oculto");
       return;
     }
+
+    origenSeccion.classList.remove("oculto");
+    if (origenBuscadorWrap) origenBuscadorWrap.classList.remove("oculto");
+    estadoVacioTotal.classList.add("oculto");
 
     const filtrados = materialesFiltrados();
 
